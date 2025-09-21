@@ -1,5 +1,6 @@
-import { Component, Input } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { Category } from '../../interfaces/Category';
+import { Product } from '../../interfaces/Product';
 
 @Component({
   selector: 'app-product',
@@ -7,8 +8,18 @@ import { Category } from '../../interfaces/Category';
   templateUrl: './product.html',
   styleUrl: './product.css'
 })
-export class Product {
+export class ProductComponent {
 
   @Input()
-  categories: Category [] = [];
+  categories: Category[] = [];
+
+  @Input()
+  product?: Product;
+
+  @Output()
+  saveEmitter = new EventEmitter;
+
+  save() {
+    this.saveEmitter.emit();
+  }
 }

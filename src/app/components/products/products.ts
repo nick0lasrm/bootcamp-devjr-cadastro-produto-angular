@@ -1,5 +1,9 @@
 import { Component } from '@angular/core';
 import { Category } from '../../interfaces/Category';
+import { Product } from '../../interfaces/Product';
+import { CategoryService } from '../../services/category';
+import { ProductComponent } from '../product/product';
+import { ProductService } from '../../services/product';
 
 @Component({
   selector: 'app-products',
@@ -9,22 +13,41 @@ import { Category } from '../../interfaces/Category';
 })
 export class Products {
 
-  categories: Category [] = [
-    {
-      id: 1,
-      name: "Produção Própria"
-    },
-    {
-      id: 2,
-      name: "Nacional"
-    },
-    {
-      id:3,
-      name: "Importado"
-    },
-    {
-      id:4,
-      name: "Premium"
-    },
-  ];
+  categories: Category[] = [];
+
+  product: Product = {} as Product;
+  products: Product[] = [];
+
+  constructor(private categoryService: CategoryService, private productService: ProductService) { }
+
+  ngOnInit(): void {
+    this.loadProducts();
+    this.loadCategories();
+  }
+
+  loadProducts() {
+    this.productService.getProducts().subscribe({
+      next: data => { this.products = data }
+    }
+    );
+  }
+
+  loadCategories() {
+    this.categoryService.getCategories().subscribe({
+      next: data => { this.categories = data }
+    }
+    );
+  }
+
+  saveProduct() {
+    this.productService.save(this.product).subscribe(
+      {
+        next: data => {
+          this.products.push(data);
+          this.product = {} as Product;
+        }
+
+      });
+  }
+
 }
